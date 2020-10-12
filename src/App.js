@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import HeaderBar from "./HeaderBar";
+import IPDetails from "./IPDetails";
+import IPMap from "./IPMap";
+import SearchBox from "./SearchBox";
+import IPDetailsField from "./IPDetailsField";
 
 function App() {
+  const [ipAddress, setIpAddress] = useState("");
+  const [ipData, setIpData] = useState({});
+  console.log("ipData", ipData);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HeaderBar>
+        <SearchBox
+          setIpAddress={setIpAddress}
+          placeholder="Search for any IP address or domain"
+        />
+      </HeaderBar>
+      <IPDetails ipAddress={ipAddress} setIpData={setIpData}>
+        <IPDetailsField field="IP Address" value={ipData.ip} />
+        <IPDetailsField field="Location" value={ipData.location?.city} />
+        <IPDetailsField
+          field="Timezone"
+          value={`UTC ${ipData.location?.timezone}`}
+        />
+        <IPDetailsField field="ISP" value={ipData.isp} />
+      </IPDetails>
+      {ipData.location && (
+        <IPMap coords={[ipData.location?.lat, ipData.location?.lng]}></IPMap>
+      )}
     </div>
   );
 }
